@@ -5,18 +5,6 @@ namespace MassEffect
 {
     partial class StarSystem
     {
-        private bool ContainsGalaxy(StarSystem N)
-        {
-            for (int i = 0; i < Systems.Count; i++)
-            {
-                if (N == Systems[i])
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public static void SetupStarSystemGraph()
         {
             Random rnd = new Random();
@@ -31,10 +19,9 @@ namespace MassEffect
                     Available.Remove(S);
                 }
 
-                for (int i = 0; i < Available.Count; i++)
+                for (int i = 0; i < rnd.Next(1, Available.Count); i++)
                 {
-                    StarSystem RandomSystem;
-                    RandomSystem = Systems[rnd.Next(0, Systems.Count)];
+                    StarSystem RandomSystem = Available[rnd.Next(0, Available.Count)];
                     G.Adjescent.Add(RandomSystem);
                     RandomSystem.Adjescent.Add(G);
                 }
