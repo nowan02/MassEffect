@@ -50,6 +50,12 @@ namespace MassEffect
             {
                 G.ShowNeightbors();
             }
+
+            SpaceShip The = new SpaceShip(100, 100);
+
+            The.Known = new List<StarSystem>(StarSystem.Systems);
+
+            Console.WriteLine(The.ShortestPath(The.Known[0], The.Known[2], new List<StarSystem>()));
         }
     }
 }

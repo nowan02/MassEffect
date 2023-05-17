@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MassEffect
@@ -12,6 +13,16 @@ namespace MassEffect
             public int HP;
         }
 
+        List<StarSystem> _known;
+
+        public List<StarSystem> Known
+        {
+            get { return _known; }
+            set { _known = value; }
+        }
+
+        StarSystem Current;
+
         List<CrewMember> Crew;
         int HP;
         int FuelLevel;
@@ -20,6 +31,31 @@ namespace MassEffect
         {
             this.HP = HP;
             this.FuelLevel = FuelLevel;
+            this._known = new List<StarSystem>();
+            this.Current = StarSystem.Systems[0];
+            _known.Add(Current);
+        }
+
+        public int ShortestPath(StarSystem Start, StarSystem End, List<StarSystem> Visited)
+        {
+            List<int> PathLengths = new List<int>();
+
+            if (Start.Adjescent.Contains(End)) return 1;
+
+            foreach (var V in Start.Adjescent)
+            {
+                Visited.Add(Start);
+                if (_known.Contains(V) && !Visited.Contains(V))
+                {
+                    PathLengths.Add(ShortestPath(V, End, Visited) + 1);
+                }
+                else
+                {
+                    return StarSystem.Systems.Count + 1;
+                }
+            }
+
+            return PathLengths.Min();
         }
 
         public void AddCrewMember(string Name, string Title)

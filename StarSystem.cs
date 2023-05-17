@@ -15,7 +15,13 @@ namespace MassEffect
         }
 
         // This is a set, because for some reason the Adjescency Creator likes to assign the same galaxy as a neighbor twice sometimes.
-        HashSet<StarSystem> Adjescent;
+        HashSet<StarSystem> _adjescent;
+
+        public HashSet<StarSystem> Adjescent
+        {
+            get { return _adjescent; }
+        }
+
         MissionNode _rootNode;
 
         public MissionNode RootNode
@@ -26,7 +32,7 @@ namespace MassEffect
         public StarSystem(string Name)
         {
             _name = Name;
-            Adjescent = new HashSet<StarSystem>();
+            _adjescent = new HashSet<StarSystem>();
         }
 
         public void RemoveCompletedMission(Dictionary<StarSystem, Mission> Route)
