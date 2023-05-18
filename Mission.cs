@@ -48,7 +48,7 @@ namespace MassEffect
         }
     }
 
-    public class Mission : IComparable
+    public class Mission
     {
         bool Completed;
         int Risk;
@@ -73,11 +73,6 @@ namespace MassEffect
         public override string ToString()
         {
             return $"{Name}\n{Description}\nRisk: {Risk}\nReward: {Reward}\n";
-        }
-
-        public int CompareTo(object OtherMission)
-        {
-            return Ratio.CompareTo((OtherMission as Mission).Ratio);
         }
     }
 }

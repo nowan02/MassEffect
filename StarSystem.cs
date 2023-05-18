@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MassEffect
 {
-    public partial class StarSystem
+    public partial class StarSystem : IComparable
     {
         public static List<StarSystem> Systems;
         string _name;
@@ -92,6 +92,11 @@ namespace MassEffect
                         break;
                 }
             }
+        }
+
+        public int CompareTo(object OtherSystem)
+        {
+            return _rootNode.Element.Ratio.CompareTo((OtherSystem as StarSystem).RootNode.Element.Ratio);
         }
     }
 }

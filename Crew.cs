@@ -6,41 +6,38 @@ namespace MassEffect
 {
     public class SpaceShip
     {
-        record CrewMember
-        {
-            public string Name;
-            public string Title;
-            public int HP;
-        }
-
         List<StarSystem> _known;
 
         public List<StarSystem> Known
         {
             get { return _known; }
-            set { _known = value; }
         }
 
-        StarSystem Current;
+        StarSystem _current;
 
-        List<CrewMember> Crew;
+        public StarSystem Current
+        {
+            get { return _current; }
+        }
+
         int HP;
         int FuelLevel;
+        int RemainingDays;
 
         public SpaceShip(int HP, int FuelLevel)
         {
             this.HP = HP;
-            this.FuelLevel = FuelLevel;
             this._known = new List<StarSystem>();
-            this.Current = StarSystem.Systems[0];
-            _known.Add(Current);
+            this._current = StarSystem.Systems[0];
+            this.RemainingDays = 10;
+            _known.Add(_current);
         }
 
         public int ShortestPath(StarSystem Start, StarSystem End, List<StarSystem> Visited)
         {
-            List<int> PathLengths = new List<int>();
-
             if (Start.Adjescent.Contains(End)) return 1;
+
+            List<int> PathLengths = new List<int>();
 
             foreach (var V in Start.Adjescent)
             {
@@ -58,41 +55,19 @@ namespace MassEffect
             return PathLengths.Min();
         }
 
-        public void AddCrewMember(string Name, string Title)
+        public void Move(StarSystem Start, StarSystem End)
         {
-            CrewMember C = new CrewMember();
-            C.Name = Name;
-            C.Title = Title;
-            C.HP = 100;
+            RemainingDays -= ShortestPath(Start, End, new List<StarSystem>());
 
-            Crew.Add(C);
-        }
-
-        public void Heal(string Name, int Heal)
-        {
-            Crew.Find(C =>
+            if (!_known.Contains(End))
             {
-                if (C.Name == Name) return true;
-                return false;
-            }).HP += Heal;
-        }
+                Console.WriteLine("NEW SYSTEM DISCOVERED: {0}", End.Name);
+                _known.Add(End);
+                _known.Sort();
+            }
 
-        private void _removeCrewMember(string Name)
-        {
-            Crew.Remove(Crew.Find(C =>
-            {
-                if (C.Name == Name) return true;
-                return false;
-            }));
-        }
-
-        private void _takeDamage(string Name, int DMG)
-        {
-            Crew.Find(C =>
-            {
-                if (C.Name == Name) return true;
-                return false;
-            }).HP -= DMG;
+            Console.WriteLine("Traveled to {0} from {1}, {2} days remain", End.Name, Start.Name, RemainingDays);
+            _current = End;
         }
     }
 }
