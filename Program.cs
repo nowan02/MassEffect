@@ -57,7 +57,7 @@ namespace MassEffect
             Console.WriteLine("Setting up the graph...\n");
             StarSystem.SetupStarSystemGraph();
 
-            SpaceShip OurShip = new SpaceShip(50);
+            SpaceShip OurShip = new SpaceShip(10);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("ALL OK!\n");
@@ -92,10 +92,13 @@ namespace MassEffect
             Console.ReadKey();
             Console.Clear();
 
-            while (OurShip.RemainingDays > 0)
+            bool Run = true;
+
+            while (OurShip.RemainingDays > 0 && Run)
             {
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("{0} Days remain...", OurShip.RemainingDays);
+                Console.WriteLine("Reward collected so far: {0}", OurShip.Value);
                 Console.ForegroundColor = ConsoleColor.White;
 
                 List<StarSystem> G = new List<StarSystem>(OurShip.Known);
@@ -118,6 +121,7 @@ namespace MassEffect
                         Console.WriteLine("* LIST - List all known galaxies and missions");
                         Console.WriteLine("* TRAVEL <number> - Travel to the galaxy by giving it's corresponding index from the LIST command");
                         Console.WriteLine("* CLEAR - Clears the console");
+                        Console.WriteLine("* EXIT - Quit the game (Saving is not possible yet)");
                         break;
                     case "DO":
                         OurShip.DoMission();
@@ -154,10 +158,28 @@ namespace MassEffect
                     case "CLEAR":
                         Console.Clear();
                         break;
+                    case "EXIT":
+                        Run = false;
+                        break;
                     default:
                         Console.WriteLine("Invalid command");
                         break;
                 }
+            }
+
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Game has ended, your stats are listed below.");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Galaxies visited: {0}\n", OurShip.Known.Count);
+            Console.WriteLine("Missions completed: {0}\n", OurShip.Completed.Count);
+            Console.WriteLine("Overall reward collected: {0}\n", OurShip.Value);
+            Console.WriteLine("Overall incidents during missions: {0}\n", OurShip.Incidents);
+            Console.WriteLine("The route you took <Mission name, Star System>:");
+            foreach (var M in OurShip.Completed)
+            {
+                Console.WriteLine("{0}, {1}", M.Key.Name, M.Value);
             }
         }
     }

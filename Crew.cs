@@ -9,6 +9,22 @@ namespace MassEffect
         //For statistics
         Dictionary<Mission, string> _completed;
         int _value;
+        int _incidents;
+
+        public Dictionary<Mission, string> Completed
+        {
+            get { return _completed; }
+        }
+
+        public int Value
+        {
+            get { return _value; }
+        }
+
+        public int Incidents
+        {
+            get { return _incidents; }
+        }
 
         List<StarSystem> _known;
 
@@ -34,33 +50,45 @@ namespace MassEffect
 
         public SpaceShip(int RemainingDays)
         {
-            this._completed = new Dictionary<Mission, string>();
-            this._known = new List<StarSystem>();
-            this._current = StarSystem.Systems[0];
-            this._remainingDays = RemainingDays;
+            _value = 0;
+            _incidents = 0;
+            _completed = new Dictionary<Mission, string>();
+            _known = new List<StarSystem>();
+            _current = StarSystem.Systems[0];
+            _remainingDays = RemainingDays;
             _known.Add(_current);
         }
 
         public int ShortestPath(StarSystem Start, StarSystem End, List<StarSystem> Visited)
         {
-            if (Start.Adjescent.Contains(End)) return 1;
-
-            List<int> PathLengths = new List<int>();
-
-            foreach (var V in Start.Adjescent)
+            if (Start.Adjescent.Contains(End))
             {
-                Visited.Add(Start);
-                if (_known.Contains(V) && !Visited.Contains(V))
-                {
-                    PathLengths.Add(ShortestPath(V, End, Visited) + 1);
-                }
-                else
-                {
-                    return StarSystem.Systems.Count + 1;
-                }
+                Visited.Add(End);
+                return 1;
             }
 
-            return PathLengths.Min();
+            int[] _distanceVector = new int[Start.Adjescent.Count];
+
+            int i;
+
+            for (i = 0; i < _distanceVector.Length; i++) _distanceVector[i] = int.MaxValue;
+
+            i = 0;
+
+            Visited.Add(Start);
+            foreach (var V in Start.Adjescent)
+            {
+                if (!Visited.Contains(V))
+                {
+                    if (_known.Contains(V))
+                    {
+                        _distanceVector[i] = ShortestPath(V, End, Visited) + 1;
+                    }
+                }
+                i++;
+            }
+
+            return _distanceVector.Min();
         }
 
         // Traverse the system
@@ -82,7 +110,7 @@ namespace MassEffect
         public void ListKnown(List<StarSystem> KnownAndNeighboring)
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("### Currently known galaxies, ordered by increasing reward/risk ratio: ###");
+            Console.WriteLine("### Currently known galaxies, ordered by decreasing reward/risk ratio: ###");
             for (int i = 0; i < KnownAndNeighboring.Count; i++)
             {
                 if (_known.Contains(KnownAndNeighboring[i]))
@@ -104,7 +132,7 @@ namespace MassEffect
                     continue;
                 }
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("* Distance:\n{0}", KnownAndNeighboring[i].Equals(_current) ? "  You are here" : "   " + ShortestPath(_current, KnownAndNeighboring[i], new List<StarSystem>()));
+                Console.WriteLine("* Distance:\n{0}", KnownAndNeighboring[i].Equals(_current) ? "  You are here" : "   " + ShortestPath(_current, KnownAndNeighboring[i], new()));
                 Console.WriteLine("* Current Mission:");
                 Console.WriteLine("  " + KnownAndNeighboring[i].RootNode.Element.ToString());
             }
@@ -113,6 +141,7 @@ namespace MassEffect
         public void DoMission()
         {
             Random rnd = new Random();
+            _value += _current.RootNode.Element.Reward;
             _current.RemoveCompletedMission(_completed);
             _remainingDays--;
 
@@ -126,6 +155,7 @@ namespace MassEffect
             Console.WriteLine(Events.EventDescriptions[e]);
             Console.WriteLine("You lost {0} days from your time limit", Events.EventPenalties[e]);
             _remainingDays -= Events.EventPenalties[e];
+            _incidents++;
         }
     }
 }

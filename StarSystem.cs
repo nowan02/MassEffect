@@ -96,7 +96,7 @@ namespace MassEffect
 
         public int CompareTo(object OtherSystem)
         {
-            return _rootNode.Element.Ratio.CompareTo((OtherSystem as StarSystem).RootNode.Element.Ratio);
+            return (OtherSystem as StarSystem).RootNode.Element.Ratio.CompareTo(_rootNode.Element.Ratio);
         }
     }
 }
