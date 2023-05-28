@@ -141,7 +141,7 @@ namespace MassEffect
                             break;
                         }
 
-                        if (_index >= G.Count)
+                        if (_index >= G.Count || _index < 0)
                         {
                             Console.WriteLine("We don't know about that many galaxies");
                             break;
