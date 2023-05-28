@@ -1,5 +1,3 @@
-using System;
-
 namespace MassEffect
 {
     public class MissionNode
@@ -50,7 +48,6 @@ namespace MassEffect
 
     public class Mission
     {
-        bool Completed;
         int Risk;
         int Reward;
         string Name;
@@ -61,9 +58,13 @@ namespace MassEffect
             get { return Reward / Risk; }
         }
 
+        public int RiskFactor
+        {
+            get { return Risk; }
+        }
+
         public Mission(string Name, int Risk, int Reward, string Description)
         {
-            this.Completed = false;
             this.Risk = Risk;
             this.Reward = Reward;
             this.Name = Name;
@@ -72,7 +73,7 @@ namespace MassEffect
 
         public override string ToString()
         {
-            return $"{Name}\n{Description}\nRisk: {Risk}\nReward: {Reward}\n";
+            return $"   {Name}\n    {Description}\n     Risk: {Risk}\n    Reward: {Reward}\n";
         }
     }
 }

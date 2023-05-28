@@ -35,9 +35,9 @@ namespace MassEffect
             _adjescent = new HashSet<StarSystem>();
         }
 
-        public void RemoveCompletedMission(Dictionary<StarSystem, Mission> Route)
+        public void RemoveCompletedMission(Dictionary<Mission, string> Route)
         {
-            Route.Add(this, _rootNode.Element);
+            Route.Add(_rootNode.Element, this._name);
             _rootNode = _rootNode.NextElement;
         }
 

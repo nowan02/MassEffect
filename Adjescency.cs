@@ -27,15 +27,5 @@ namespace MassEffect
                 }
             }
         }
-
-        public void ShowNeightbors()
-        {
-            Console.WriteLine("*** _adjescent to {0} ***\n", Name);
-
-            foreach (var G in _adjescent)
-            {
-                Console.WriteLine("* Star System: {0}\nCurrent mission: {1}", G.Name, G.RootNode.Element.ToString());
-            }
-        }
     }
 }

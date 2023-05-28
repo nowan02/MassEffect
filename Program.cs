@@ -7,6 +7,7 @@ namespace MassEffect
     {
         static void Main(string[] args)
         {
+            Console.Clear();
             StarSystem.Systems = new List<StarSystem>();
 
             Console.WriteLine("Loading Galaxies and Missions...\n");
@@ -53,6 +54,11 @@ namespace MassEffect
                 return;
             }
 
+            Console.WriteLine("Setting up the graph...\n");
+            StarSystem.SetupStarSystemGraph();
+
+            SpaceShip OurShip = new SpaceShip(50);
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("ALL OK!\n");
 
@@ -85,6 +91,74 @@ namespace MassEffect
             Console.ForegroundColor = ConsoleColor.White;
             Console.ReadKey();
             Console.Clear();
+
+            while (OurShip.RemainingDays > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.WriteLine("{0} Days remain...", OurShip.RemainingDays);
+                Console.ForegroundColor = ConsoleColor.White;
+
+                List<StarSystem> G = new List<StarSystem>(OurShip.Known);
+                foreach (var neighbor in OurShip.Current.Adjescent)
+                {
+                    if (!G.Contains(neighbor)) G.Add(neighbor);
+                }
+
+                Console.WriteLine("You can control the ship via this command prompt, type HELP for all commands:");
+                string[] _userInput = Console.ReadLine().Split(" ");
+
+                switch (_userInput[0].ToUpper())
+                {
+                    case "HELP":
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("Available commands:");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine("* HELP - List all commands");
+                        Console.WriteLine("* DO - Do the mission on the galaxy you are currently on");
+                        Console.WriteLine("* LIST - List all known galaxies and missions");
+                        Console.WriteLine("* TRAVEL <number> - Travel to the galaxy by giving it's corresponding index from the LIST command");
+                        Console.WriteLine("* CLEAR - Clears the console");
+                        break;
+                    case "DO":
+                        OurShip.DoMission();
+                        break;
+                    case "LIST":
+                        OurShip.ListKnown(G);
+                        break;
+                    case "TRAVEL":
+                        int _index = 0;
+                        try
+                        {
+                            _index = int.Parse(_userInput[1]) - 1;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            Console.WriteLine("Invalid argument");
+                            break;
+                        }
+
+                        if (_index >= G.Count)
+                        {
+                            Console.WriteLine("We don't know about that many galaxies");
+                            break;
+                        }
+
+                        if (OurShip.Current.Equals(G[_index]))
+                        {
+                            Console.WriteLine("You are already here");
+                            break;
+                        }
+
+                        OurShip.Travel(OurShip.Current, G[_index]);
+                        break;
+                    case "CLEAR":
+                        Console.Clear();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid command");
+                        break;
+                }
+            }
         }
     }
 }
