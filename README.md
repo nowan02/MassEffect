@@ -37,3 +37,7 @@ a simple recursive algorithm decides the shortest path, which is just the number
 > END
 * Events can also be extended in "eventtest". Format:
 > event_description;penalty_days
+
+### My thoughts
+The project became really messy due to all the console messages. In the future I would like to separate these into functions, or use a UI framework.
+Filenames and their contents didn't always match. Planning ahead could have prevented these problems.
